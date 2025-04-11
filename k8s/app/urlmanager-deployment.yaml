@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlmanager-app
+  labels:
+    app: urlmanager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlmanager-app
+  template:
+    metadata:
+      labels:
+        app: urlmanager-app
+    spec:
+      containers:
+      - name: urlmanager-app
+        image: ghcr.io/vedw/urlmanager:0.0.1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret
+              key: DB_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret
+              key: DB_NAME
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret
+              key: DB_HOST
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: IMAGE_TAG
+          value: 0.0.1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: urlmanager-app-service
+  labels:
+    app: urlmanager-app
+spec:
+  selector:
+    app: urlmanager-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

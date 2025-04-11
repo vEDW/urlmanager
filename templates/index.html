@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Manager</title>
+    <style>
+        .horizontal-line {
+            border-bottom: 1px solid #ccc;
+            margin: 15px 0;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>URL Manager</h1>
+    <div class="horizontal-line"></div>
+    <p class="node-info">image: {{ image_tag }}</p>
+    <p class="node-info">Pod: {{ hostname }} - Worker Node: {{ node_name }}</p>
+    <div class="horizontal-line"></div>
+    {% if db_error %}
+        <p class="error-message">{{ db_error }}</p>
+    {% else %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+
+    <form action="/add" method="post">
+        <input type="text" name="url" placeholder="Enter URL" required>
+        <input type="text" name="description" placeholder="Enter Description" required>
+        <button type="submit">Add URL</button>
+    </form>
+
+    <h2>Stored URLs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+            <tr>
+                <td><a href="{{ url[1] }}" target="_blank">{{ url[1] }}</a></td>
+                <td>{{ url[2] }}</td>
+                <td>
+                    <a href="{{ url_for('delete_url', id=url[0]) }}" onclick="return confirm('Are you sure you want to delete this URL?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

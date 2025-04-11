@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-urlmanager-db
+  labels:
+    app: pg-urlmanager-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-urlmanager-db
+  template:
+    metadata:
+      labels:
+        app: pg-urlmanager-db
+    spec:
+      containers:
+      - name: postgres-container
+        image: postgres:latest 
+        env:
+        - name: POSTGRES_DB 
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret 
+              key: DB_NAME 
+        - name: POSTGRES_USER 
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret 
+              key: DB_USERNAME 
+        - name: POSTGRES_PASSWORD 
+          valueFrom:
+            secretKeyRef:
+              name: urlmanager-db-secret 
+              key: DB_PASSWORD 
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgresql-storage
+            subPath: urlmanager
+      volumes:
+      - name: postgresql-storage
+        persistentVolumeClaim:
+          claimName: postgresql-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-pvc
+  labels:
+    app: pg-urlmanager-db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: pg-urlmanager-db 
+  labels:
+    app: pg-urlmanager-db
+spec:
+  ports:
+    - name: pgsql-service
+      port: 5432 
+      targetPort: 5432 
+      protocol: TCP 
+  type: ClusterIP 
+  selector:
+    app: pg-urlmanager-db 
