@@ -129,9 +129,9 @@ def index():
         returntext = returntext + " HTTP_X_FORWARDED_FOR=" + str(request.environ.get('HTTP_X_FORWARDED_FOR'))
         returntext = returntext + " X-Real-IP=" + str(request.environ.get('X-Real-IP'))
         print(returntext)
-        return render_template('index.html', urls=urls, hostname=str(hostname), node_name=str(MY_NODE_NAME), topology_region=str(TOPOLOGY_REGION), topology_zone=str(TOPOLOGY_ZONE), image_tag=str(IMAGE_TAG))
+        return render_template('index.html', urls=urls, hostname=str(hostname), node_name=str(MY_NODE_NAME), image_tag=str(IMAGE_TAG))
     except psycopg2.Error as e:
-        return render_template('index.html', db_error=f"Database error: {str(e)}",hostname=str(hostname), node_name=str(MY_NODE_NAME), topology_region=str(TOPOLOGY_REGION), topology_zone=str(TOPOLOGY_ZONE), image_tag=str(IMAGE_TAG))
+        return render_template('index.html', db_error=f"Database error: {str(e)}",hostname=str(hostname), node_name=str(MY_NODE_NAME),  image_tag=str(IMAGE_TAG))
     
 @app.route('/dblist')
 def dblist():
