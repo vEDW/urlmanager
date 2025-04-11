@@ -1,0 +1,89 @@
+name: Docker Build and Push with Incremental Tag
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  VERSION_FILE: .version
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: lowercase github.repository
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY@L}" >> ${GITHUB_ENV}
+  
+      - name: Read and increment version
+        id: version
+        run: |
+          if [ ! -f $VERSION_FILE ]; then
+            echo "1.0.0" > $VERSION_FILE
+          fi
+          current_version=$(cat $VERSION_FILE)
+          IFS='.' read -ra version_parts <<< "$current_version"
+          ((version_parts[2]++))
+          new_version="${version_parts[0]}.${version_parts[1]}.${version_parts[2]}"
+          echo $new_version > $VERSION_FILE
+          echo "NEW_VERSION=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Commit version bump
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add $VERSION_FILE
+          git commit -m "[skip ci] Bump version to ${{ steps.version.outputs.NEW_VERSION }}"
+          git push
+  
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.version.outputs.NEW_VERSION }}
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        id: dockerbuild
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update Kubernetes deployment
+        id: k8syaml
+        if: steps.dockerbuild.outcome == 'success'
+        run: |
+          sed -i 's|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.NEW_VERSION }}|I' k8s/app/urlmanager-deployment.yaml
+          sed -i 's|value: .*|value: ${{ steps.version.outputs.NEW_VERSION }}|I' k8s/app/urlmanager-deployment.yaml
+        
+      - name: Commit version bump
+        if: steps.k8syaml.outcome == 'success'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add k8s/app/urlmanager-deployment.yaml
+          git commit -m "[skip ci] Bump k8s image ref to ${{ steps.version.outputs.NEW_VERSION }}"
+          git push
