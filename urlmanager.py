@@ -172,7 +172,7 @@ def curlme():
         db_status="DB DOWN"
     else:
         conn.close()
-    returntext = str(IMAGE_TAG) + " - " + hostname + " - " + str(MY_NODE_NAME) + " - " + str(TOPOLOGY_ZONE) + " - " + str(TOPOLOGY_REGION) + " - " + str(db_status)
+    returntext = str(IMAGE_TAG) + " - " + hostname + " - " + str(MY_NODE_NAME) + " - " + str(db_status)
     print(request.remote_addr)
     return returntext
 
