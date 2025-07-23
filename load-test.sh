@@ -4,7 +4,7 @@
 
 [ "${URL}" == "" ] && echo 'usage: export URL="http://<ip or url>"' && exit 1
 
-declare answers
+declare -A answers
 #answers=("test")
 
 echo "testing with URL = ${URL} "
