@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgres-container
-        image: postgres:latest
+        image: postgres:17.6
         env:
         - name: POSTGRES_DB 
           valueFrom:
