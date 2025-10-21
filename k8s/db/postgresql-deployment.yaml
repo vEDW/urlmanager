@@ -14,9 +14,16 @@ spec:
       labels:
         app: pg-urlmanager-db
     spec:
+      initContainers:
+      - name: init-permissions
+        image: busybox:1.36
+        command: ["sh", "-c", "mkdir -p /var/lib/postgresql/data && chown -R 1000:1000 /var/lib/postgresql/data"]
+        volumeMounts:
+        - name: postgresql-storage
+          mountPath: /var/lib/postgresql/data
       containers:
       - name: postgres-container
-        image: postgres:latest 
+        image: postgres:17.6 
         env:
         - name: POSTGRES_DB 
           valueFrom:
@@ -35,6 +42,21 @@ spec:
               key: DB_PASSWORD 
         ports:
           - containerPort: 5432
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: postgresql-storage
