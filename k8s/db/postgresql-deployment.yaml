@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgres-container
-        image: postgres:17.6 
+        image: postgres:latest
         env:
         - name: POSTGRES_DB 
           valueFrom:
@@ -44,7 +44,8 @@ spec:
             cpu: "500m"
         securityContext:
           runAsNonRoot: true
-          runAsUser: 1000
+          runAsUser: 999
+          fsGroup: 999
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
           capabilities:
