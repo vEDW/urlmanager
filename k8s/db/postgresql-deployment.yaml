@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgres-container
-        image: postgres:17.6
+        image: postgres:latest
         env:
         - name: POSTGRES_DB 
           valueFrom:
@@ -52,7 +52,7 @@ spec:
             drop:
               - ALL
         volumeMounts:
-          - mountPath: /var/lib/postgresql/data
+          - mountPath: /var/lib/postgresql/
             name: postgresql-storage
             subPath: urlmanager
       volumes:
