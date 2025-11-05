@@ -4,6 +4,7 @@ metadata:
   name: pg-urlmanager-db
   labels:
     app: pg-urlmanager-db
+    full-app: urlmanager
 spec:
   replicas: 1
   selector:
@@ -57,6 +58,7 @@ metadata:
   name: postgresql-pvc
   labels:
     app: pg-urlmanager-db
+    full-app: urlmanager
 spec:
   accessModes:
   - ReadWriteOnce
@@ -70,6 +72,7 @@ metadata:
   name: pg-urlmanager-db 
   labels:
     app: pg-urlmanager-db
+    full-app: urlmanager
 spec:
   ports:
     - name: pgsql-service
