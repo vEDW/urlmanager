@@ -12,6 +12,7 @@ spec:
       app: urlmanager-app
   template:
     metadata:
+      creationTimestamp: "2025-11-05T10:00:00Z"
       labels:
         app: urlmanager-app
     spec:
