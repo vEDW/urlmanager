@@ -12,6 +12,7 @@ spec:
       app: pg-urlmanager-db
   template:
     metadata:
+      creationTimestamp: "2025-11-05T10:00:00Z"
       labels:
         app: pg-urlmanager-db
     spec:
