@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: urlmanager-app
-        image: ghcr.io/vedw/urlmanager:0.0.12
+        image: ghcr.io/vedw/urlmanager:0.0.13
         ports:
         - containerPort: 5000
         env:
@@ -47,7 +47,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         - name: IMAGE_TAG
-          value: 0.0.12
+          value: 0.0.13
 ---
 apiVersion: v1
 kind: Service
