@@ -25,23 +25,23 @@ spec:
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: urlmanager-db-secret
-              key: DB_USERNAME
+              name: pg-urlmanager-app
+              key: username
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: urlmanager-db-secret
-              key: DB_PASSWORD
+              name: pg-urlmanager-app
+              key: password
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: urlmanager-db-secret
-              key: DB_NAME
+              name: pg-urlmanager-app
+              key: dbname
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
-              name: urlmanager-db-secret
-              key: DB_HOST
+              name: pg-urlmanager-app
+              key: host
         - name: MY_NODE_NAME
           valueFrom:
             fieldRef:
