@@ -16,6 +16,18 @@ spec:
       labels:
         app: urlmanager-app
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - urlmanager-app
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: urlmanager-app
         image: ghcr.io/vedw/urlmanager:0.0.17
