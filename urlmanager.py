@@ -193,7 +193,12 @@ def delete_url(id):
 
 @app.route('/healthz')
 def healthz():
-    return '', 200
+    return 'OK', 200
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
 
 if __name__ == '__main__':
     app.run(debug=True)
