@@ -32,7 +32,7 @@ spec:
       - name: urlmanager-app
         securityContext:
           allowPrivilegeEscalation: false
-        image: ghcr.io/vedw/urlmanager:0.0.19
+        image: ghcr.io/vedw/urlmanager:0.0.20
         ports:
         - containerPort: 5000
         env:
@@ -61,7 +61,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         - name: IMAGE_TAG
-          value: 0.0.19
+          value: 0.0.20
 ---
 apiVersion: v1
 kind: Service
