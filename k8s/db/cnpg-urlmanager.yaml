@@ -2,12 +2,12 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: pg-urlmanager
+  labels:
+    app: urlmanager-app
 spec:
   instances: 1
-
   bootstrap:
     initdb:
       database: urlmanager
-
   storage:
     size: 10Gi

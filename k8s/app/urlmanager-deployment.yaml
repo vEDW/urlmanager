@@ -4,7 +4,6 @@ metadata:
   name: urlmanager-app
   labels:
     app: urlmanager-app
-    full-app: urlmanager
 spec:
   replicas: 2
   selector:
