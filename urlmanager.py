@@ -119,10 +119,7 @@ print(check_and_create_database())  # Check and create database if necessary
 def index():
     conn = get_db_connection()
     if conn is None:
-        #try recreating the database if connection fails
-        print("DB connection failed, trying to recreate the database")
-        print(check_and_create_database())
-        return render_template('index.html', db_error="Unable to connect to the database - trying to reconnect")
+        return render_template('index.html', db_error="Unable to connect to the database")
     
     try:
         cur = conn.cursor()
@@ -136,6 +133,9 @@ def index():
         print(returntext)
         return render_template('index.html', urls=urls, hostname=str(hostname), node_name=str(MY_NODE_NAME), image_tag=str(IMAGE_TAG))
     except psycopg2.Error as e:
+        #try recreating the database if connection fails
+        print("DB connection failed, trying to recreate the database")
+        print(check_and_create_database())
         return render_template('index.html', db_error=f"Database error: {str(e)}",hostname=str(hostname), node_name=str(MY_NODE_NAME),  image_tag=str(IMAGE_TAG))
     
 @app.route('/dblist')
