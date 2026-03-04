@@ -84,7 +84,7 @@ def check_and_create_database():
             ('https://www.nutanix.com/uk/products/kubernetes-management-platform/', 'Nutanix NKP'),
             ('https://www.nutanix.com/uk/support-services/training-certification', 'Nutanix University'),
             ('https://github.com/nutanixdev/nkp-quickstart', 'NKP Quickstart'),
-            
+            ('https://www.youtube.com/playlist?list=PLAHgaS9IrJefcZzuLgAYoidusiAGpFa-D', 'Youtube Channel - Nutanix NKP Playlist')
         ]
         print("Injecting data")
         cur.executemany('INSERT INTO urls (url, description) VALUES (%s, %s)', initial_data)
