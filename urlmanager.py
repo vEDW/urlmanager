@@ -82,7 +82,9 @@ def check_and_create_database():
         initial_data = [
             ('https://www.nutanix.com/uk/products/database-service', 'Nutanix NDB'),
             ('https://www.nutanix.com/uk/products/kubernetes-management-platform/', 'Nutanix NKP'),
-            ('https://www.nutanix.com/uk/support-services/training-certification', 'Nutanix University')
+            ('https://www.nutanix.com/uk/support-services/training-certification', 'Nutanix University'),
+            ('https://github.com/nutanixdev/nkp-quickstart', 'NKP Quickstart'),
+            
         ]
         print("Injecting data")
         cur.executemany('INSERT INTO urls (url, description) VALUES (%s, %s)', initial_data)
@@ -117,7 +119,10 @@ print(check_and_create_database())  # Check and create database if necessary
 def index():
     conn = get_db_connection()
     if conn is None:
-        return render_template('index.html', db_error="Unable to connect to the database")
+        #try recreating the database if connection fails
+        print("DB connection failed, trying to recreate the database")
+        print(check_and_create_database())
+        return render_template('index.html', db_error="Unable to connect to the database - trying to reconnect")
     
     try:
         cur = conn.cursor()
