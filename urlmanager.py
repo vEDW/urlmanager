@@ -181,6 +181,12 @@ def curlme():
     print(request.remote_addr)
     return returntext
 
+@app.route('/showmyip')
+def show_my_ip():
+    returntext = request.remote_addr
+    print(request.remote_addr)
+    return returntext
+
 @app.route('/dropdb')
 def drop_db():
     drop_database()
