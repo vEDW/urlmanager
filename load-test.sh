@@ -1,9 +1,13 @@
 #!/bin/bash
 
-#URL="http://<ip or url>"
 
-[ "${URL}" == "" ] && echo 'usage: export URL="http://<ip or url>"' && exit 1
-
+#check is $1 is set
+if [ "$1" != "" ]; then
+    URL=$1
+else
+    #URL="http://<ip or url>"
+    [ "${URL}" == "" ] && echo 'usage: export URL="http://<ip or url>"' && exit 1
+fi
 declare -A answers
 #answers=("test")
 
