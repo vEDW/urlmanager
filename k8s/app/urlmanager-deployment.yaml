@@ -7,18 +7,6 @@ metadata:
     full-app: urlmanager
 spec:
   replicas: 2
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 100
-        podAffinityTerm:
-          labelSelector:
-            matchExpressions:
-            - key: app
-              operator: In
-              values:
-              - urlmanager-app
-          topologyKey: topology.kubernetes.io/zone
   selector:
     matchLabels:
       app: urlmanager-app
@@ -28,6 +16,18 @@ spec:
       labels:
         app: urlmanager-app
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - urlmanager-app
+              topologyKey: topology.kubernetes.io/zone
       containers:
       - name: urlmanager-app
         image: ghcr.io/vedw/urlmanager:0.0.40
