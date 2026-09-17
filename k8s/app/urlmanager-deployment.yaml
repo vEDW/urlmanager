@@ -5,7 +5,6 @@ metadata:
   labels:
     app: urlmanager-app
     full-app: urlmanager
-    version: 0.0.41
 spec:
   replicas: 2
   selector:
@@ -16,6 +15,7 @@ spec:
       creationTimestamp: "2025-11-05T10:00:00Z"
       labels:
         app: urlmanager-app
+        version: 0.0.41
     spec:
       affinity:
         podAntiAffinity:
