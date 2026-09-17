@@ -75,5 +75,40 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 5000
-  type: LoadBalancer
-#  externalTrafficPolicy: Local
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: urlmanager-gateway
+  labels:
+    app: urlmanager-app
+    full-app: urlmanager
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: urlmanager-route
+  labels:
+    app: urlmanager-app
+    full-app: urlmanager
+spec:
+  parentRefs:
+  - name: urlmanager-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: urlmanager-app-service
+      port: 80
