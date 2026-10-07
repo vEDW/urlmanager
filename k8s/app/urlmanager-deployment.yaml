@@ -6,7 +6,7 @@ metadata:
     app: urlmanager-app
     full-app: urlmanager
 spec:
-  replicas: 200
+  replicas: 2
   selector:
     matchLabels:
       app: urlmanager-app
